@@ -5,7 +5,7 @@ from services import getRates, getHistory
 API_KEY = "myapikey"
 API_KEY_NAME = "api_key"
 
-api_key_header = APIKeyHeader(name=API_KEY_NAME)
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=True)
 
 app = FastAPI()
 
