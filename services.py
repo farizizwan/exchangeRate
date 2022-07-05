@@ -69,6 +69,11 @@ def getHistory(endpoint, base, symbol):
     if req.status_code == status.HTTP_200_OK:
         res = req.json()
         names = jsonExtract(res, symbol.upper())
+        if not names:
+            raise HTTPException(
+                status_code= status.HTTP_404_NOT_FOUND, detail="Currency not found"
+            )
+
         history = History(
             maximum = max(names),
             minumum = min(names),
@@ -77,6 +82,7 @@ def getHistory(endpoint, base, symbol):
         )
         redis.set(f'history{base.upper()}{symbol.upper()}', json.dumps(res), 60*60*24)
         return history
+        
     else:
         raise HTTPException(
             status_code= status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Exchange API response returned not status code 200"
