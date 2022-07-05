@@ -16,7 +16,7 @@ def getRates(endpoint, convertFrom, to, amount):
             convertFrom = res['query']['from'],
             to = res['query']['to'],
             rates = res['info']['rate'],
-            amount = amount * res['info']['rate'],
+            amount = round(amount * res['info']['rate'],2),
             source = 'cache'
         )
         return rates
@@ -35,7 +35,7 @@ def getRates(endpoint, convertFrom, to, amount):
             convertFrom = res['query']['from'],
             to = res['query']['to'],
             rates = res['info']['rate'],
-            amount = res['result'],
+            amount = round(res['result'],2),
             source = 'api'
         )       
         redis.set('rates'+convertFrom.upper()+'to'+to.upper(), json.dumps(res),60*5)
@@ -82,7 +82,7 @@ def getHistory(endpoint, base, symbol):
         )
         redis.set(f'history{base.upper()}{symbol.upper()}', json.dumps(res), 60*60*24)
         return history
-        
+
     else:
         raise HTTPException(
             status_code= status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Exchange API response returned not status code 200"
