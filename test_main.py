@@ -35,6 +35,12 @@ def test_history_forbidden():
     assert response.status_code == 403
     assert response.json() == {"detail": "Invalid credential"}
 
+def test_history_currencynotexist():
+    response = client.get("/history?base=gbp123&symbol=myr123", headers={"api_key": "myapikey"})
+    assert response.status_code == 404
+    res = response.json()
+    assert response.json() == {"detail": "Currency not found"}
+
 def test_history_success():
     response = client.get("/history?base=gbp&symbol=myr", headers={"api_key": "myapikey"})
     assert response.status_code == 200
